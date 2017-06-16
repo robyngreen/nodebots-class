@@ -14,4 +14,9 @@ board.on('ready', () => {
     strobing ? led.stop().off() : led.strobe()
     strobing = !strobing
   })
+
+  this.repl.inject({
+    button,
+    led
+  })
 });
