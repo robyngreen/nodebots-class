@@ -3,16 +3,33 @@ const five = require('johnny-five')
 const board = new five.Board({
   io: new Raspi()
 })
+const req = require('request')
 
 board.on('ready', () => {
   let led = new five.Led('P1-19')
-  led.strobe()
+  //led.strobe()
   let strobing = true
+  let requesting = false
 
   let button = five.Button('P1-11')
   button.on('press', () => {
-    strobing ? led.stop().off() : led.strobe()
-    strobing = !strobing
+
+    if (!requesting) {
+      requesting = true;
+      req('https://uacpjy16u6.execute-api.us-east-1.amazonaws.com/prod/dinojs-lambda-dev-hello', function (error, response, body) {
+        console.log(response);
+        led.strobe()
+        setTimeout(function () {
+          led.stop().off();
+          requesting = false;
+        }, response * 1000)
+      });
+    }
+
+
+
+    //strobing ? led.stop().off() : led.strobe()
+    //strobing = !strobing
   })
 
   /*this.repl.inject({
