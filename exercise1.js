@@ -17,6 +17,7 @@ board.on('ready', () => {
     if (!requesting) {
       requesting = true;
       req('https://uacpjy16u6.execute-api.us-east-1.amazonaws.com/prod/dinojs-lambda-dev-hello', function (error, response, body) {
+        body = JSON.parse(body);
         console.log(body.numSeconds);
         led.strobe()
         setTimeout(function () {
